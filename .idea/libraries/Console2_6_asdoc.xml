@@ -3,7 +3,9 @@
     <CLASSES>
       <root url="jar://$PROJECT_DIR$/lib/Console2.6+asdoc.swc!/" />
     </CLASSES>
-    <JAVADOC />
+    <JAVADOC>
+      <root url="http://junkbyte.com/flash-console/asdoc/" />
+    </JAVADOC>
     <SOURCES />
   </library>
 </component>
