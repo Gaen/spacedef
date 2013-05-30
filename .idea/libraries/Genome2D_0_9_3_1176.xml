@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Genome2D.0.9.3.1176" type="flex">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/Genome2D.0.9.3.1176.swc!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="http://docs.genome2d.com/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

@@ -1,9 +1,11 @@
 package
 {
-    import com.junkbyte.console.Cc;
+    import com.genome2d.core.GConfig;
+    import com.genome2d.core.Genome2D;
 
     import flash.display.Sprite;
     import flash.events.Event;
+    import flash.geom.Rectangle;
 
     public class Main extends Sprite
     {
@@ -41,6 +43,22 @@ package
         {
             // биндим консоль на тильду
             ConsoleHandler.init(stage, 192);
+
+            initGraphics();
+        }
+
+        /**
+         * Инициализация Genome2D
+         */
+        private function initGraphics():void
+        {
+            var g2d:Genome2D = Genome2D.getInstance();
+
+            var config:GConfig = new GConfig(new Rectangle(0,0,600, 600));
+
+            config.enableStats = true;
+
+            g2d.init(stage, config);
         }
     }
 }
