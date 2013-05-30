@@ -4,6 +4,11 @@
     <configurations>
       <configuration name="Main" pure-as="true" main-class="Preloader" output-file="Main.swf" output-folder="$MODULE_DIR$/bin">
         <dependencies target-player="11.1">
+          <entries>
+            <entry library-name="Console2.6+asdoc" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
+          </entries>
           <sdk name="4.6.0" />
         </dependencies>
         <compiler-options>
@@ -24,6 +29,7 @@
     </content>
     <orderEntry type="jdk" jdkName="4.6.0" jdkType="Flex SDK Type (new)" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" exported="" name="Console2.6+asdoc" level="project" />
   </component>
 </module>
 
