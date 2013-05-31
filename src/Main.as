@@ -1,5 +1,7 @@
 package
 {
+    import assets.TestAsset;
+
     import com.genome2d.core.GConfig;
     import com.genome2d.core.Genome2D;
 
@@ -45,6 +47,13 @@ package
             ConsoleHandler.init(stage, 192);
 
             initGraphics();
+
+            var testAsset:Sprite = new TestAsset();
+
+            testAsset.x = stage.stageWidth / 2;
+            testAsset.y = stage.stageHeight / 2;
+
+            addChild(testAsset);
         }
 
         /**
@@ -55,6 +64,8 @@ package
             var g2d:Genome2D = Genome2D.getInstance();
 
             var config:GConfig = new GConfig(new Rectangle(0,0,600, 600));
+
+            config.backgroundColor = 0x333333;
 
             config.enableStats = true;
 
