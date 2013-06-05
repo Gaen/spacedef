@@ -1,16 +1,17 @@
 package
 {
-    import assets.TestAsset;
-
     import com.genome2d.core.GConfig;
     import com.genome2d.core.Genome2D;
 
+    import flash.display.DisplayObjectContainer;
     import flash.display.Sprite;
     import flash.events.Event;
     import flash.geom.Rectangle;
 
     public class Main extends Sprite
     {
+        private var _app:Application;
+
         /**
          * Конструктор.
          */
@@ -43,33 +44,35 @@ package
          */
         private function init():void
         {
-            // биндим консоль на тильду
-            ConsoleHandler.init(stage, 192);
+            ConsoleHandler.init(stage, Settings.CONSOLE_KEY);
 
-            initGraphics();
-
-            var testAsset:Sprite = new TestAsset();
-
-            testAsset.x = stage.stageWidth / 2;
-            testAsset.y = stage.stageHeight / 2;
-
-            addChild(testAsset);
+            initGraphics(onGraphicsInited);
         }
 
         /**
          * Инициализация Genome2D
          */
-        private function initGraphics():void
+        private function initGraphics(callback:Function):void
         {
             var g2d:Genome2D = Genome2D.getInstance();
 
-            var config:GConfig = new GConfig(new Rectangle(0,0,600, 600));
+            var config:GConfig = new GConfig(new Rectangle(0, 0, Settings.WIDTH, Settings.HEIGHT));
 
             config.backgroundColor = 0x333333;
 
             config.enableStats = true;
 
+            g2d.onInitialized.addOnce(callback);
+
             g2d.init(stage, config);
+        }
+
+        /**
+         * Обработчик завершения инициализации Genome2D
+         */
+        private function onGraphicsInited():void
+        {
+            _app = new Application(root as DisplayObjectContainer);
         }
     }
 }
