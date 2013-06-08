@@ -1,0 +1,11 @@
+<component name="libraryTable">
+  <library name="Ash" type="flex">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/lib/Ash.swc!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="http://www.ashframework.org/docs/" />
+    </JAVADOC>
+    <SOURCES />
+  </library>
+</component>

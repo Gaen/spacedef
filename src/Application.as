@@ -1,7 +1,5 @@
 package
 {
-    import com.junkbyte.console.Cc;
-
     import flash.display.DisplayObjectContainer;
     import flash.events.Event;
 
@@ -12,6 +10,7 @@ package
         private var _root:DisplayObjectContainer;
 
         private var _mainMenu:MainMenu;
+        private var _game:Game;
 
         public function Application(root:DisplayObjectContainer)
         {
@@ -26,9 +25,7 @@ package
         {
             _mainMenu.destroy();
 
-            Cc.log("play");
-
-            Cc.visible = true;
+            _game = new Game(_root);
         }
     }
 }

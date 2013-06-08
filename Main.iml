@@ -14,6 +14,9 @@
             <entry library-name="assets" library-level="project">
               <dependency linkage="Merged" />
             </entry>
+            <entry library-name="Ash" library-level="project">
+              <dependency linkage="Merged" />
+            </entry>
           </entries>
           <sdk name="air_sdk_3.7" />
         </dependencies>
@@ -38,6 +41,7 @@
     <orderEntry type="library" exported="" name="Console2.6+asdoc" level="project" />
     <orderEntry type="library" exported="" name="Genome2D.0.9.3.1183" level="project" />
     <orderEntry type="library" exported="" name="assets" level="project" />
+    <orderEntry type="library" exported="" name="Ash" level="project" />
   </component>
 </module>
 

@@ -3,7 +3,6 @@ package gui
     import assets.gui_MainMenu;
 
     import flash.display.DisplayObjectContainer;
-    import flash.display.MovieClip;
     import flash.events.Event;
     import flash.events.EventDispatcher;
     import flash.events.MouseEvent;
