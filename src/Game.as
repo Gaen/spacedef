@@ -11,19 +11,17 @@ package
     import com.genome2d.textures.GTexture;
     import com.genome2d.textures.factories.GTextureFactory;
 
-    import game.WorldSettings;
+    import flash.display.DisplayObjectContainer;
+    import flash.display.Stage;
 
+    import game.WorldSettings;
     import game.components.DisplayComponent;
     import game.components.MotionComponent;
     import game.components.PositionComponent;
-
-    import flash.display.DisplayObjectContainer;
-
     import game.components.SizeComponent;
     import game.systems.DebugRenderSystem;
-
+    import game.systems.MouseHandlingSystem;
     import game.systems.MovementSystem;
-
     import game.systems.RenderSystem;
     import game.systems.SystemPriorities;
 
@@ -44,6 +42,7 @@ package
             _engine = new Engine();
 
             _engine.addSystem(new MovementSystem(), SystemPriorities.MOVE);
+            _engine.addSystem(new MouseHandlingSystem(container.stage as Stage), SystemPriorities.INPUT_PROCESSED);
             _engine.addSystem(new RenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER_OBJECTS);
             _engine.addSystem(new DebugRenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER_DEBUG);
 

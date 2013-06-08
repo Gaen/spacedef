@@ -12,13 +12,18 @@ package game.systems
         public static const MOVE:uint = 0;
 
         /**
+         * Выполнить после обработки пользовательского ввода.
+         */
+        public static const INPUT_PROCESSED:uint = 1;
+
+        /**
          * Отрисовка игровых объектов
          */
-        public static const RENDER_OBJECTS:uint = 1;
+        public static const RENDER_OBJECTS:uint = 2;
 
         /**
          * Отрисовка отладочных хелперов
          */
-        public static const RENDER_DEBUG:uint = 2;
+        public static const RENDER_DEBUG:uint = 3;
     }
 }
