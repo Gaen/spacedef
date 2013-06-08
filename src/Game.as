@@ -11,16 +11,16 @@ package
     import com.genome2d.textures.GTexture;
     import com.genome2d.textures.factories.GTextureFactory;
 
-    import components.DisplayComponent;
-    import components.MotionComponent;
-    import components.PositionComponent;
+    import game.components.DisplayComponent;
+    import game.components.MotionComponent;
+    import game.components.PositionComponent;
 
     import flash.display.DisplayObjectContainer;
 
-    import systems.MovementSystem;
+    import game.systems.MovementSystem;
 
-    import systems.RenderSystem;
-    import systems.SystemPriorities;
+    import game.systems.RenderSystem;
+    import game.systems.SystemPriorities;
 
     public class Game
     {

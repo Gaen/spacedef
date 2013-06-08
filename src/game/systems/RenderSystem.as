@@ -1,4 +1,4 @@
-package systems
+package game.systems
 {
     import ash.core.Engine;
     import ash.core.NodeList;
@@ -7,10 +7,10 @@ package systems
     import com.genome2d.components.GTransform;
     import com.genome2d.core.GNode;
 
-    import components.DisplayComponent;
-    import components.PositionComponent;
+    import game.components.DisplayComponent;
+    import game.components.PositionComponent;
 
-    import nodes.DisplayNode;
+    import game.nodes.DisplayNode;
 
     /**
      * Система, отвечающая за рендеринг.

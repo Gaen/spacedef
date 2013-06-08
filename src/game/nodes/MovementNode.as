@@ -1,9 +1,9 @@
-package nodes
+package game.nodes
 {
     import ash.core.Node;
 
-    import components.MotionComponent;
-    import components.PositionComponent;
+    import game.components.MotionComponent;
+    import game.components.PositionComponent;
 
     public class MovementNode extends Node
     {

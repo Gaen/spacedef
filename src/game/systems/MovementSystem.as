@@ -1,11 +1,11 @@
-package systems
+package game.systems
 {
     import ash.tools.ListIteratingSystem;
 
-    import components.MotionComponent;
-    import components.PositionComponent;
+    import game.components.MotionComponent;
+    import game.components.PositionComponent;
 
-    import nodes.MovementNode;
+    import game.nodes.MovementNode;
 
     /**
      * Система движения объектов.
