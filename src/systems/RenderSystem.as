@@ -77,6 +77,7 @@ package systems
 
                 transform.x = position.x;
                 transform.y = position.y;
+                transform.rotation = position.rotation * Math.PI / 180;
             }
         }
 

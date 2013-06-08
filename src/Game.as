@@ -8,12 +8,16 @@ package
     import com.genome2d.core.GNode;
     import com.genome2d.core.GNodeFactory;
     import com.genome2d.core.Genome2D;
+    import com.genome2d.textures.GTexture;
     import com.genome2d.textures.factories.GTextureFactory;
 
     import components.DisplayComponent;
+    import components.MotionComponent;
     import components.PositionComponent;
 
     import flash.display.DisplayObjectContainer;
+
+    import systems.MovementSystem;
 
     import systems.RenderSystem;
     import systems.SystemPriorities;
@@ -21,6 +25,9 @@ package
     public class Game
     {
         private var _engine:Engine;
+
+        // TODO запилить хранилище текстур
+        private var _asteroidTexture:GTexture = GTextureFactory.createFromBitmapData("asteroid", new bmp_Asteroid());
 
         /**
          * Конструктор.
@@ -31,23 +38,31 @@ package
         {
             _engine = new Engine();
 
+            _engine.addSystem(new MovementSystem(), SystemPriorities.MOVE);
             _engine.addSystem(new RenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER);
 
-            var asteroidView:GNode = GNodeFactory.createNode();
-            var asteroidSprite:GSprite = asteroidView.addComponent(GSprite) as GSprite;
-            asteroidSprite.setTexture(GTextureFactory.createFromBitmapData("asteroid", new bmp_Asteroid()));
-
-            var asteroid:Entity = new Entity();
-
-            asteroid
-                .add(new PositionComponent(300, 300))
-                .add(new DisplayComponent(asteroidView));
-
-            _engine.addEntity(asteroid);
+            for(var i:uint = 0; i < 1000; i++) _engine.addEntity(createAsteroid());
 
             var tickProvider:FrameTickProvider = new FrameTickProvider(container);
             tickProvider.add(_engine.update);
             tickProvider.start();
+        }
+
+        private function createAsteroid():Entity
+        {
+            var asteroidView:GNode = GNodeFactory.createNode();
+            var asteroidSprite:GSprite = asteroidView.addComponent(GSprite) as GSprite;
+
+            asteroidSprite.setTexture(_asteroidTexture);
+
+            var asteroid:Entity = new Entity();
+
+            asteroid
+                .add(new PositionComponent(Math.random() * 600, Math.random() * 600))
+                .add(new MotionComponent(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 30 - 15))
+                .add(new DisplayComponent(asteroidView));
+
+            return asteroid;
         }
     }
 }
