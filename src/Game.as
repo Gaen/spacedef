@@ -19,6 +19,8 @@ package
 
     import flash.display.DisplayObjectContainer;
 
+    import game.components.SizeComponent;
+
     import game.systems.MovementSystem;
 
     import game.systems.RenderSystem;
@@ -50,6 +52,11 @@ package
             tickProvider.start();
         }
 
+        /**
+         * Создает астероид.
+         *
+         * @return сущность астероида
+         */
         private function createAsteroid():Entity
         {
             var asteroidView:GNode = GNodeFactory.createNode();
@@ -61,6 +68,7 @@ package
 
             asteroid
                 .add(new PositionComponent(Math.random() * WorldSettings.WIDTH, Math.random() * WorldSettings.HEIGHT))
+                .add(new SizeComponent(_asteroidTexture.width, _asteroidTexture.height))
                 .add(new MotionComponent(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 30 - 15))
                 .add(new DisplayComponent(asteroidView));
 
