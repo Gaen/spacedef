@@ -11,6 +11,8 @@ package
     import com.genome2d.textures.GTexture;
     import com.genome2d.textures.factories.GTextureFactory;
 
+    import game.WorldSettings;
+
     import game.components.DisplayComponent;
     import game.components.MotionComponent;
     import game.components.PositionComponent;
@@ -58,7 +60,7 @@ package
             var asteroid:Entity = new Entity();
 
             asteroid
-                .add(new PositionComponent(Math.random() * 600, Math.random() * 600))
+                .add(new PositionComponent(Math.random() * WorldSettings.WIDTH, Math.random() * WorldSettings.HEIGHT))
                 .add(new MotionComponent(Math.random() * 20 - 10, Math.random() * 20 - 10, Math.random() * 30 - 15))
                 .add(new DisplayComponent(asteroidView));
 

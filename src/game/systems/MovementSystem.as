@@ -2,6 +2,8 @@ package game.systems
 {
     import ash.tools.ListIteratingSystem;
 
+    import game.WorldSettings;
+
     import game.components.MotionComponent;
     import game.components.PositionComponent;
 
@@ -32,16 +34,11 @@ package game.systems
             // Обновляем угол поворота
             position.rotation += motion.vAngle * time;
 
-            // Размеры игрового мира
-            // TODO вынести в конфиг
-            const WORLD_WIDTH:int = 600;
-            const WORLD_HEIGHT:int = 600;
-
             // Не даем объектам улететь за пределы мира
-            if(position.x < 0) position.x += WORLD_WIDTH;
-            if(position.y < 0) position.y += WORLD_HEIGHT;
-            if(position.x > WORLD_WIDTH) position.x -= WORLD_WIDTH;
-            if(position.y > WORLD_HEIGHT) position.y -= WORLD_HEIGHT;
+            if(position.x < 0) position.x += WorldSettings.WIDTH;
+            if(position.y < 0) position.y += WorldSettings.HEIGHT;
+            if(position.x > WorldSettings.WIDTH) position.x -= WorldSettings.WIDTH;
+            if(position.y > WorldSettings.HEIGHT) position.y -= WorldSettings.HEIGHT;
         }
     }
 }
