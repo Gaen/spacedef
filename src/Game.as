@@ -20,6 +20,7 @@ package
     import flash.display.DisplayObjectContainer;
 
     import game.components.SizeComponent;
+    import game.systems.DebugRenderSystem;
 
     import game.systems.MovementSystem;
 
@@ -43,7 +44,8 @@ package
             _engine = new Engine();
 
             _engine.addSystem(new MovementSystem(), SystemPriorities.MOVE);
-            _engine.addSystem(new RenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER);
+            _engine.addSystem(new RenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER_OBJECTS);
+            _engine.addSystem(new DebugRenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER_DEBUG);
 
             for(var i:uint = 0; i < 1000; i++) _engine.addEntity(createAsteroid());
 
