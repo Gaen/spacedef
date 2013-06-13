@@ -4,16 +4,13 @@ package game.systems
     import ash.core.NodeList;
     import ash.core.System;
 
+    import flash.events.MouseEvent;
     import flash.geom.Point;
-
     import flash.geom.Rectangle;
-
-    import game.components.PositionComponent;
-    import game.components.SizeComponent;
 
     import game.nodes.CollisionNode;
 
-    import game.nodes.input.MouseDownNode;
+    import input.MouseManager;
 
     /**
      * Система, удаляющая игровые объекты по клику.
@@ -21,10 +18,6 @@ package game.systems
     public class ClickToRemoveSystem extends System
     {
         private var _engine:Engine;
-
-        public function ClickToRemoveSystem()
-        {
-        }
 
         //---------------------------------------------------------------------
         //
@@ -53,15 +46,14 @@ package game.systems
          */
         override public function update(time:Number):void
         {
+            var event:MouseEvent;
+
             // для каждого события нажатия мыши
-            for(var mouseDownNodes:NodeList = _engine.getNodeList(MouseDownNode),
-                    mouseDownNode:MouseDownNode = mouseDownNodes.head;
-                mouseDownNode;
-                mouseDownNode = mouseDownNode.next)
+            while(event = MouseManager.getNext(MouseEvent.MOUSE_DOWN))
             {
                 // координаты нажатия
-                var mouseX:Number = mouseDownNode.event.x;
-                var mouseY:Number = mouseDownNode.event.y;
+                var mouseX:Number = event.stageX;
+                var mouseY:Number = event.stageY;
 
                 // для каждого игрового объекта
                 for(var collisionNodes:NodeList = _engine.getNodeList(CollisionNode),
@@ -85,9 +77,6 @@ package game.systems
                     {
                         // удаляем объект
                         _engine.removeEntity(collisionNode.entity);
-
-                        // убиваем событие
-                        _engine.removeEntity(mouseDownNode.entity);
 
                         // прекращаем обрабатывать текущее нажатие
                         break;

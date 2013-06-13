@@ -12,7 +12,6 @@ package
     import com.genome2d.textures.factories.GTextureFactory;
 
     import flash.display.DisplayObjectContainer;
-    import flash.display.Stage;
 
     import game.WorldSettings;
     import game.components.DisplayComponent;
@@ -20,11 +19,12 @@ package
     import game.components.PositionComponent;
     import game.components.SizeComponent;
     import game.systems.ClickToRemoveSystem;
-    import game.systems.DebugRenderSystem;
     import game.systems.MouseHandlingSystem;
     import game.systems.MovementSystem;
     import game.systems.RenderSystem;
     import game.systems.SystemPriorities;
+
+    import input.MouseManager;
 
     public class Game
     {
@@ -40,11 +40,13 @@ package
          */
         public function Game(container:DisplayObjectContainer)
         {
+            MouseManager.init(container.stage);
+
             _engine = new Engine();
 
             _engine.addSystem(new MovementSystem(), SystemPriorities.MOVE);
             _engine.addSystem(new ClickToRemoveSystem(), SystemPriorities.PROCESS_INPUT);
-            _engine.addSystem(new MouseHandlingSystem(container.stage as Stage), SystemPriorities.INPUT_PROCESSED);
+            _engine.addSystem(new MouseHandlingSystem(), SystemPriorities.INPUT_PROCESSED);
             _engine.addSystem(new RenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER_OBJECTS);
             //_engine.addSystem(new DebugRenderSystem(Genome2D.getInstance().root), SystemPriorities.RENDER_DEBUG);
 
