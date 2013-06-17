@@ -12,8 +12,10 @@ package input
      * Отслеживает нажатие, перемещение, отпускание и клики.
      * Складывает событие каждого типа в соответствующую очередь.
      *
-     * Системы, обрабатывающие мышиные события, должны получать их через метод getNext(),
-     * а в конце каждой итерации игрового цикла необходимо вызывать clear() для удаления
+     * Системы, обрабатывающие мышиные события, должны вызывать метод dispatch(), передавая
+     * туда экземпляр MouseListener, в котором заданы обработчики для нужных типов событий.
+     *
+     * В в конце каждой итерации игрового цикла необходимо вызывать clear() для удаления
      * неиспользованных событий.
      *
      * Перед использованием класса его необходимо проинициализировать методом init().
@@ -24,10 +26,7 @@ package input
     {
         private static var _stage:Stage;
 
-        private static var _downEvents :Vector.<MouseEvent>;
-        private static var _moveEvents :Vector.<MouseEvent>;
-        private static var _upEvents   :Vector.<MouseEvent>;
-        private static var _clickEvents:Vector.<MouseEvent>;
+        private static var _events:Vector.<MouseEvent>;
 
         //---------------------------------------------------------------------
         //
@@ -56,10 +55,10 @@ package input
 
             try
             {
-                _stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-                _stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-                _stage.addEventListener(MouseEvent.MOUSE_UP,   onMouseUp);
-                _stage.addEventListener(MouseEvent.CLICK,      onClick);
+                _stage.addEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+                _stage.addEventListener(MouseEvent.MOUSE_MOVE, onMouseEvent);
+                _stage.addEventListener(MouseEvent.MOUSE_UP,   onMouseEvent);
+                _stage.addEventListener(MouseEvent.CLICK,      onMouseEvent);
             }
             finally{}
         }
@@ -73,58 +72,50 @@ package input
 
             try
             {
-                _stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseDown);
-                _stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseMove);
-                _stage.removeEventListener(MouseEvent.MOUSE_UP,   onMouseUp);
-                _stage.removeEventListener(MouseEvent.CLICK,      onClick);
+                _stage.removeEventListener(MouseEvent.MOUSE_DOWN, onMouseEvent);
+                _stage.removeEventListener(MouseEvent.MOUSE_MOVE, onMouseEvent);
+                _stage.removeEventListener(MouseEvent.MOUSE_UP,   onMouseEvent);
+                _stage.removeEventListener(MouseEvent.CLICK,      onMouseEvent);
             }
             finally{}
         }
 
         /**
-         * Достать следующее событие в очереди. Событие при этом удаляется из очереди.
+         * Отдать события на обработку.
          *
-         * @param type  <p>Тип события. Возможные значения:</p>
-         *              <ul>
-         *                  <li>MouseEvent.MOUSE_DOWN</li>
-         *                  <li>MouseEvent.MOUSE_MOVE</li>
-         *                  <li>MouseEvent.MOUSE_UP</li>
-         *                  <li>MouseEvent.CLICK</li>
-         *              </ul>
+         * Перебирает накопленные события в том порядке, в каком они возникли, и для каждого события
+         * вызывает соответствующий обработчик из объекта listener, передавая ему объект события
+         * в качестве аргумента.
          *
-         * @return событие заданного типа либо null, если очередь событий данного типа пуста.
+         * Если обработчик для какого-то типа событий не задан, события этого типа пропускаются.
+         *
+         * @param listener
          */
-        public static function getNext(type:String):MouseEvent
+        public static function dispatch(listener:MouseListener):void
         {
             ensureInited();
 
-            var source:Vector.<MouseEvent>;
-
-            switch(type)
+            for each(var e:MouseEvent in _events)
             {
-                case MouseEvent.MOUSE_DOWN:
-                    source = _downEvents;
-                    break;
+                switch(e.type)
+                {
+                    case MouseEvent.MOUSE_DOWN:
+                        listener.onMouseDown && listener.onMouseDown(e);
+                        break;
 
-                case MouseEvent.MOUSE_MOVE:
-                    source = _moveEvents;
-                    break;
+                    case MouseEvent.MOUSE_MOVE:
+                        listener.onMouseUp   && listener.onMouseUp(e);
+                        break;
 
-                case MouseEvent.MOUSE_UP:
-                    source = _upEvents;
-                    break;
+                    case MouseEvent.MOUSE_UP:
+                        listener.onMouseMove && listener.onMouseMove(e);
+                        break;
 
-                case MouseEvent.CLICK:
-                    source = _clickEvents;
-                    break;
-
-                default:
-                    throw new ArgumentError("Неверный тип события! См. документацию к методу.");
+                    case MouseEvent.CLICK:
+                        listener.onClick     && listener.onClick(e);
+                        break;
+                }
             }
-
-            if(!source || !source.length) return null;
-
-            return source.shift() as MouseEvent;
         }
 
         /**
@@ -134,10 +125,7 @@ package input
         {
             ensureInited();
 
-            _downEvents  = null;
-            _moveEvents  = null;
-            _upEvents    = null;
-            _clickEvents = null;
+            _events = null;
         }
 
         //---------------------------------------------------------------------
@@ -146,32 +134,11 @@ package input
         //
         //---------------------------------------------------------------------
 
-        private static function onMouseDown(e:MouseEvent):void
+        private static function onMouseEvent(e:MouseEvent):void
         {
-            if(!_downEvents) _downEvents = new Vector.<MouseEvent>();
+            _events ||= new Vector.<MouseEvent>();
 
-            _downEvents.push(e);
-        }
-
-        private static function onMouseMove(e:MouseEvent):void
-        {
-            if(!_moveEvents) _moveEvents = new Vector.<MouseEvent>();
-
-            _moveEvents.push(e);
-        }
-
-        private static function onMouseUp(e:MouseEvent):void
-        {
-            if(!_upEvents) _upEvents = new Vector.<MouseEvent>();
-
-            _upEvents.push(e);
-        }
-
-        private static function onClick(e:MouseEvent):void
-        {
-            if(!_clickEvents)  _clickEvents = new Vector.<MouseEvent>();
-
-            _clickEvents.push(e);
+            _events.push(e);
         }
 
         private static function ensureInited():void

@@ -10,6 +10,8 @@ package game.systems
 
     import game.nodes.CollisionNode;
 
+    import input.MouseListener;
+
     import input.MouseManager;
 
     /**
@@ -18,6 +20,15 @@ package game.systems
     public class ClickToRemoveSystem extends System
     {
         private var _engine:Engine;
+
+        private var _listener:MouseListener;
+
+        public function ClickToRemoveSystem():void
+        {
+            _listener = new MouseListener();
+
+            _listener.onMouseDown = onMouseDown;
+        }
 
         //---------------------------------------------------------------------
         //
@@ -46,44 +57,43 @@ package game.systems
          */
         override public function update(time:Number):void
         {
-            var event:MouseEvent;
+            MouseManager.dispatch(_listener);
+        }
 
-            // для каждого события нажатия мыши
-            while(event = MouseManager.getNext(MouseEvent.MOUSE_DOWN))
+        //---------------------------------------------------------------------
+        //
+        //  Private methods
+        //
+        //---------------------------------------------------------------------
+
+        private function onMouseDown(e:MouseEvent):void
+        {
+            // для каждого игрового объекта
+            for(var collisionNodes:NodeList = _engine.getNodeList(CollisionNode),
+                    collisionNode:CollisionNode = collisionNodes.head;
+                collisionNode;
+                collisionNode = collisionNode.next)
             {
-                // координаты нажатия
-                var mouseX:Number = event.stageX;
-                var mouseY:Number = event.stageY;
+                var x:Number = collisionNode.position.x;
+                var y:Number = collisionNode.position.y;
 
-                // для каждого игрового объекта
-                for(var collisionNodes:NodeList = _engine.getNodeList(CollisionNode),
-                        collisionNode:CollisionNode = collisionNodes.head;
-                    collisionNode;
-                    collisionNode = collisionNode.next)
+                var width:Number = collisionNode.size.width;
+                var height:Number = collisionNode.size.height;
+
+                var rect:Rectangle = new Rectangle(x - width / 2,
+                                                   y - height / 2,
+                                                   width,
+                                                   height);
+
+                // если попали по объекту
+                if(rect.containsPoint(new Point(e.stageX, e.stageY)))
                 {
-                    var x:Number = collisionNode.position.x;
-                    var y:Number = collisionNode.position.y;
+                    // удаляем объект
+                    _engine.removeEntity(collisionNode.entity);
 
-                    var width:Number = collisionNode.size.width;
-                    var height:Number = collisionNode.size.height;
-
-                    var rect:Rectangle = new Rectangle(x - width / 2,
-                                                       y - height / 2,
-                                                       width,
-                                                       height);
-
-                    // если попали по объекту
-                    if(rect.containsPoint(new Point(mouseX, mouseY)))
-                    {
-                        // удаляем объект
-                        _engine.removeEntity(collisionNode.entity);
-
-                        // прекращаем обрабатывать текущее нажатие
-                        break;
-                    }
+                    // прекращаем обрабатывать текущее нажатие
+                    return;
                 }
-
-
             }
         }
     }
