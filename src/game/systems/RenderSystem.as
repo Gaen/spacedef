@@ -73,11 +73,9 @@ package game.systems
                 var position:PositionComponent = node.position;
                 var display:DisplayComponent = node.display;
 
-                var transform:GTransform = display.view.transform;
-
-                transform.x = position.x;
-                transform.y = position.y;
-                transform.rotation = position.rotation * Math.PI / 180;
+                display.x = position.x;
+                display.y = position.y;
+                display.rotation = position.rotation * Math.PI / 180;
             }
         }
 
@@ -89,12 +87,12 @@ package game.systems
 
         private function addToDisplay(node:DisplayNode):void
         {
-            _container.addChild(node.display.view);
+            _container.addChild(node.display.node);
         }
 
         private function removeFromDisplay(node:DisplayNode):void
         {
-            _container.removeChild(node.display.view);
+            _container.removeChild(node.display.node);
         }
     }
 }

@@ -16,19 +16,9 @@ package game.systems
 
     public class DebugRenderSystem extends System
     {
-        private var _container:GNode;
-
         private var _engine:Engine;
 
         private var _displayNodes:NodeList;
-
-        /**
-         * Конструктор.
-         */
-        public function DebugRenderSystem(container:GNode)
-        {
-            _container = container;
-        }
 
         //---------------------------------------------------------------------
         //
@@ -59,6 +49,16 @@ package game.systems
          */
         override public function removeFromEngine(engine:Engine):void
         {
+            _displayNodes.nodeAdded.remove(addBox);
+            _displayNodes.nodeRemoved.remove(removeBox);
+
+            for(var node:DisplayNode = _displayNodes.head; node; node = node.next)
+            {
+                removeBox(node);
+            }
+
+            _displayNodes = null;
+
             _engine = null;
         }
 
@@ -77,83 +77,23 @@ package game.systems
         //---------------------------------------------------------------------
 
         /**
-         * Добавляет к ноде объекта дочернюю ноду с текстурой рамки.
+         * Включает рамку у объекта
          *
          * @param node
          */
         private function addBox(node:DisplayNode):void
         {
-            var gnode:GNode = node.display.view;
-
-            var boxNode:GNode = GNodeFactory.createNode("debug_box");
-
-            var boxSprite:GSprite = boxNode.addComponent(GSprite) as GSprite;
-
-            var boxTexture:GTexture = getTexture(node.size.width, node.size.height);
-
-            boxSprite.setTexture(boxTexture);
-
-            gnode.addChild(boxNode);
+            node.display.showBox(node.size.width, node.size.height);
         }
 
         /**
-         * Удаляет из ноды объекта дочернюю ноду с текстурой рамки.
+         * Выключает рамку у объекта
+         *
          * @param node
          */
         private function removeBox(node:DisplayNode):void
         {
-            var gnode:GNode = node.display.view;
-
-            for(var childNode:GNode = gnode.firstChild; childNode; childNode = childNode.next)
-            {
-                if(childNode.name == "debug_box")
-                {
-                    gnode.removeChild(childNode);
-
-                    break;
-                }
-            }
-        }
-
-        /**
-         * Возвращает текстуру рамки.
-         *
-         * @return
-         */
-        private function getTexture(width:uint, height:uint):GTexture
-        {
-            var textureId:String = "debug_box_" + width + "x" + height;
-
-            var texture:GTexture = GTexture.getTextureById(textureId);
-
-            if(!texture)
-            {
-                var bd:BitmapData = new BitmapData(width, height, true, 0x00000000);
-
-                const color:uint = 0x66FFFFFF;
-
-                var i:uint;
-
-                bd.lock();
-
-                // top
-                for(i = 0; i < width; i++) bd.setPixel32(i, 0, color);
-
-                // bottom
-                for(i = 0; i < width; i++) bd.setPixel32(i, height - 1, color);
-
-                // left
-                for(i = 0; i < height; i++) bd.setPixel32(0, i, color);
-
-                // right
-                for(i = 0; i < height; i++) bd.setPixel32(width - 1, i, color);
-
-                bd.unlock();
-
-                texture = GTextureFactory.createFromBitmapData(textureId, bd);
-            }
-
-            return texture;
+            node.display.hideBox();
         }
     }
 }
