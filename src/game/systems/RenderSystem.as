@@ -6,6 +6,7 @@ package game.systems
 
     import com.genome2d.components.GTransform;
     import com.genome2d.core.GNode;
+    import com.genome2d.core.Genome2D;
 
     import game.components.DisplayComponent;
     import game.components.PositionComponent;
@@ -53,6 +54,9 @@ package game.systems
 
             _nodes.nodeAdded.add(addToDisplay);
             _nodes.nodeRemoved.add(removeFromDisplay);
+
+            // отключаем автоматический рендеринг
+            Genome2D.getInstance().autoUpdate = false;
         }
 
         /**
@@ -61,6 +65,9 @@ package game.systems
         override public function removeFromEngine(engine:Engine):void
         {
             _engine = null;
+
+            // включаем автоматический рендеринг обратно
+            Genome2D.getInstance().autoUpdate = true;
         }
 
         /**
@@ -77,6 +84,15 @@ package game.systems
                 display.y = position.y;
                 display.rotation = position.rotation * Math.PI / 180;
             }
+
+            var g2d:Genome2D = Genome2D.getInstance();
+
+            // отрисовываем сцену
+            g2d.update();
+            g2d.beginRender();
+            g2d.render();
+            g2d.endRender();
+
         }
 
         //---------------------------------------------------------------------
