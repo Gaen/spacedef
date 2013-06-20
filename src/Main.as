@@ -61,6 +61,7 @@ package
             config.backgroundColor = 0x333333;
 
             config.enableStats = true;
+            config.showExtendedStats = true;
 
             g2d.onInitialized.addOnce(callback);
 
