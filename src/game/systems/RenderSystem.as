@@ -70,21 +70,35 @@ package game.systems
 
             g2d.beginRender();
 
+            // отрисовываем объекты
             for(var node:DisplayNode = _nodes.head; node; node = node.next)
             {
-                var position:PositionComponent = node.position;
-                var display:DisplayComponent = node.display;
-
                 // обновляем анимацию
-                display.update(time);
+                node.display.update(time);
 
                 // рисуем объект
-                g2d.context.draw(display.getTexture(), position.x, position.y, 1, 1, position.rotation * Math.PI / 180);
+                g2d.context.draw(node.display.getTexture(),
+                                 node.position.x,
+                                 node.position.y,
+                                 1,
+                                 1,
+                                 node.position.rotation * Math.PI / 180);
 
+
+            }
+
+            // отрисовываем рамки для тех объектов, у которых они есть
+            for(node = _nodes.head; node; node = node.next)
+            {
                 var box:BoxComponent = node.entity.get(BoxComponent);
 
-                // если у объекта есть рамка - рисуем рамку
-                if(box) g2d.context.draw(box.getTexture(), position.x, position.y, 1, 1, position.rotation * Math.PI / 180);
+                // рисуем рамку
+                if(box) g2d.context.draw(box.getTexture(),
+                                         node.position.x,
+                                         node.position.y,
+                                         1,
+                                         1,
+                                         node.position.rotation * Math.PI / 180);
             }
 
             g2d.endRender();
