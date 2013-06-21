@@ -4,13 +4,12 @@ package game.systems
     import ash.core.NodeList;
     import ash.core.System;
 
-    import com.genome2d.components.GTransform;
     import com.genome2d.core.GNode;
     import com.genome2d.core.Genome2D;
 
+    import game.components.BoxComponent;
     import game.components.DisplayComponent;
     import game.components.PositionComponent;
-
     import game.nodes.DisplayNode;
 
     /**
@@ -47,14 +46,6 @@ package game.systems
 
             _nodes = engine.getNodeList(DisplayNode);
 
-            for(var node:DisplayNode = _nodes.head; node; node = node.next)
-            {
-                addToDisplay(node);
-            }
-
-            _nodes.nodeAdded.add(addToDisplay);
-            _nodes.nodeRemoved.add(removeFromDisplay);
-
             // отключаем автоматический рендеринг
             Genome2D.getInstance().autoUpdate = false;
         }
@@ -75,40 +66,29 @@ package game.systems
          */
         override public function update(time:Number):void
         {
+            var g2d:Genome2D = Genome2D.getInstance();
+
+            g2d.beginRender();
+
             for(var node:DisplayNode = _nodes.head; node; node = node.next)
             {
                 var position:PositionComponent = node.position;
                 var display:DisplayComponent = node.display;
 
-                display.x = position.x;
-                display.y = position.y;
-                display.rotation = position.rotation * Math.PI / 180;
+                // обновляем анимацию
+                display.update(time);
+
+                // рисуем объект
+                g2d.context.draw(display.getTexture(), position.x, position.y, 1, 1, position.rotation * Math.PI / 180);
+
+                var box:BoxComponent = node.entity.get(BoxComponent);
+
+                // если у объекта есть рамка - рисуем рамку
+                if(box) g2d.context.draw(box.getTexture(), position.x, position.y, 1, 1, position.rotation * Math.PI / 180);
             }
 
-            var g2d:Genome2D = Genome2D.getInstance();
-
-            // отрисовываем сцену
-            g2d.update();
-            g2d.beginRender();
-            g2d.render();
             g2d.endRender();
 
-        }
-
-        //---------------------------------------------------------------------
-        //
-        //  Private methods
-        //
-        //---------------------------------------------------------------------
-
-        private function addToDisplay(node:DisplayNode):void
-        {
-            _container.addChild(node.display.node);
-        }
-
-        private function removeFromDisplay(node:DisplayNode):void
-        {
-            _container.removeChild(node.display.node);
         }
     }
 }
