@@ -7,6 +7,8 @@ package game.systems
     import com.genome2d.core.GNode;
     import com.genome2d.core.Genome2D;
 
+    import flash.geom.Rectangle;
+
     import game.components.BoxComponent;
     import game.components.DisplayComponent;
     import game.components.PositionComponent;
@@ -18,6 +20,7 @@ package game.systems
     public class RenderSystem extends System
     {
         private var _container:GNode;
+        private var _viewport:Rectangle;
 
         private var _engine:Engine;
 
@@ -26,9 +29,10 @@ package game.systems
         /**
          * Конструктор.
          */
-        public function RenderSystem(container:GNode)
+        public function RenderSystem(container:GNode, viewport:Rectangle)
         {
             _container = container;
+            _viewport = viewport;
         }
 
         //---------------------------------------------------------------------
@@ -70,19 +74,23 @@ package game.systems
 
             g2d.beginRender();
 
+            var screenPosition:PositionComponent;
+
             // отрисовываем объекты
             for(var node:DisplayNode = _nodes.head; node; node = node.next)
             {
                 // обновляем анимацию
                 node.display.update(time);
 
+                screenPosition = translateCoords(node.position);
+
                 // рисуем объект
                 g2d.context.draw(node.display.getTexture(),
-                                 node.position.x,
-                                 node.position.y,
+                                 screenPosition.x,
+                                 screenPosition.y,
                                  1,
                                  1,
-                                 node.position.rotation * Math.PI / 180);
+                                 screenPosition.rotation * Math.PI / 180);
 
 
             }
@@ -92,17 +100,36 @@ package game.systems
             {
                 var box:BoxComponent = node.entity.get(BoxComponent);
 
+                screenPosition = translateCoords(node.position);
+
                 // рисуем рамку
                 if(box) g2d.context.draw(box.getTexture(),
-                                         node.position.x,
-                                         node.position.y,
+                                         screenPosition.x,
+                                         screenPosition.y,
                                          1,
                                          1,
-                                         node.position.rotation * Math.PI / 180);
+                                         screenPosition.rotation * Math.PI / 180);
             }
 
             g2d.endRender();
 
+        }
+
+        /**
+         * Преобразовывает мировые координаты в экранные.
+         *
+         * Центр экранных координат находится внизу посередине области _viewport,
+         * ось Y направлена вверх.
+         *
+         * @param position позиция объекта в мировых координатах
+         *
+         * @return позиция объекта в экранных координатах.
+         */
+        private function translateCoords(position:PositionComponent):PositionComponent
+        {
+            return new PositionComponent(_viewport.x + _viewport.width / 2 + position.x,
+                                         _viewport.y + _viewport.height - position.y,
+                                         position.rotation);
         }
     }
 }

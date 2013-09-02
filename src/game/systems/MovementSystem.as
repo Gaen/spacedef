@@ -35,10 +35,15 @@ package game.systems
             position.rotation += motion.vAngle * time;
 
             // Не даем объектам улететь за пределы мира
-            if(position.x < 0) position.x += WorldSettings.WIDTH;
-            if(position.y < 0) position.y += WorldSettings.HEIGHT;
-            if(position.x > WorldSettings.WIDTH) position.x -= WorldSettings.WIDTH;
-            if(position.y > WorldSettings.HEIGHT) position.y -= WorldSettings.HEIGHT;
+
+            // по горизонтали
+            if(position.x < WorldSettings.bounds.left) position.x += WorldSettings.WIDTH;
+            if(position.x > WorldSettings.bounds.right) position.x -= WorldSettings.WIDTH;
+
+            // по вертикали
+            // мировая ось Y направлена вверх
+            if(position.y < WorldSettings.bounds.top) position.y += WorldSettings.HEIGHT;
+            if(position.y > WorldSettings.bounds.bottom) position.y -= WorldSettings.HEIGHT;
         }
     }
 }
